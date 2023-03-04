@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <GL/gl.h>     
-#include <GL/glu.h>   
-#include <GL/glut.h>   
-#include "SOIL.h" 
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+#include "SOIL.h"
 
 #define R 1
 #define B 2
@@ -21,7 +21,7 @@
 
 
 //------------------------------------------------------//
-// Global Variables.                                    //
+//                                //
 //  													//
 //------------------------------------------------------//
 
@@ -44,7 +44,7 @@ int moves=0;
 int initialK;
 int L,N,K,finalscore,hammers;
 int ***maze=NULL;
-double rotate_y=0; 
+double rotate_y=0;
 double rotate_x=0;
 bool disable=true;  //gia na mhn paizw ape3w apo ton maze
 bool gameOver=false;
@@ -78,18 +78,18 @@ void mouseButton(int button, int state, int x, int y);
 //------------------------------------------------------//
 
 
-void loadTextures()     
+void loadTextures()
 {
-	
+
 	textures[0] = SOIL_load_OGL_texture("T1.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	
+
 	textures[1] = SOIL_load_OGL_texture("T2.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
 	glBindTexture(GL_TEXTURE_2D, textures[1]);
-	
+
 	textures[2] = SOIL_load_OGL_texture("T3.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
 	glBindTexture(GL_TEXTURE_2D, textures[2]);
-	
+
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 }
@@ -100,7 +100,7 @@ void draw_cylinder(GLfloat radius,GLfloat height)
 	GLfloat y              = 0.0;
 	GLfloat angle          = 0.0;
 	GLfloat angle_stepsize = 0.1;
-	
+
 	/** Draw the tube */
 	glColor3f(1,1,0);
 	glBegin(GL_QUAD_STRIP);
@@ -115,7 +115,7 @@ void draw_cylinder(GLfloat radius,GLfloat height)
 	glVertex3f(radius, 0.0, height);
 	glVertex3f(radius, 0.0, 0.0);
 	glEnd();
-	
+
 	/** Draw the circle on top of cylinder */
 	glColor3f(1,1,0);
 	glBegin(GL_POLYGON);
@@ -131,7 +131,7 @@ void draw_cylinder(GLfloat radius,GLfloat height)
 }
 
 void renderBitmapString(float x,float y,float z,void *font,char *string){
-	
+
 	char *c;
 	glRasterPos3f(x, y,z);
 	for (c=string; *c != '\0'; c++) {
@@ -140,64 +140,64 @@ void renderBitmapString(float x,float y,float z,void *font,char *string){
 }
 
 void restorePerspectiveProjection() {
-	
+
 	glMatrixMode(GL_PROJECTION);
 	// restore previous projection matrix
 	glPopMatrix();
-	
+
 	// get back to modelview mode
 	glMatrixMode(GL_MODELVIEW);
 }
 
 void setOrthographicProjection() {
-	
+
 	// switch to projection mode
 	glMatrixMode(GL_PROJECTION);
-	
+
 	// save previous matrix which contains the
 	//settings for the perspective projection
 	glPushMatrix();
-	
+
 	// reset matrix
 	glLoadIdentity();
-	
+
 	// set a 2D orthographic projection
 	gluOrtho2D(0, w, h, 0);
-	
+
 	// switch back to modelview mode
 	glMatrixMode(GL_MODELVIEW);
 }
 
 void readMazeFile(char *name){
-	
+
 	char C,buf[100];
 	int i,j,k;
 	FILE *infile=fopen(name,"r");
 	if(infile==NULL) exit(0);
-	
+
 	C=fgetc(infile);
 	C=fgetc(infile);
-	fscanf(infile,"%d",&L);	
-	
+	fscanf(infile,"%d",&L);
+
 	C=fgetc(infile);
-	if(C=='\r') 
+	if(C=='\r')
 		C=fgetc(infile);
-	
+
 	C=fgetc(infile);
 	C=fgetc(infile);
-	
+
 	fscanf(infile,"%d",&N);
 	C=fgetc(infile);
-	if(C=='\r') 
+	if(C=='\r')
 		C=fgetc(infile);
-	
+
 	C=fgetc(infile);
 	C=fgetc(infile);
 	fscanf(infile,"%d",&K);
 	initialK=K;
-	
+
 	C=fgetc(infile);
-	if(C=='\r') 
+	if(C=='\r')
 		C=fgetc(infile);
 
 	maze=(int ***)malloc(N*sizeof(int **));
@@ -205,7 +205,7 @@ void readMazeFile(char *name){
 		printf("Error\n");
 		exit(0);
 	}
-	
+
 	for(i=0;i<N;i++){
 		maze[i]=(int **)malloc(N*sizeof(int *));
 		if(maze[i]==NULL){
@@ -213,7 +213,7 @@ void readMazeFile(char *name){
 			exit(0);
 		}
 	}
-	
+
 	for(i=0;i<N;i++){
 		for(j=0;j<N;j++){
 			maze[i][j]=(int *)malloc(L*sizeof(int));
@@ -222,7 +222,7 @@ void readMazeFile(char *name){
 				exit(0);
 			}
 		}
-	}	
+	}
 	for(k=0;k<L;k++){
 		fgets(buf,100,infile);
 		for(i=0;i<N;i++){
@@ -258,7 +258,7 @@ void readMazeFile(char *name){
 				}
 				C=fgetc(infile);
 			}
-			if(C=='\r') 
+			if(C=='\r')
 				C=fgetc(infile);
 		}
 	}
@@ -276,9 +276,9 @@ void changeSize(int w, int h) {
 }
 
 void destroyCube() {
-	
+
 	float deltaMove=1;
-	
+
 	float xx =x+ deltaMove *lx;
 	float zz =z+ deltaMove *lz;
 	if(xx>=0 && zz>=0 && (int)(xx)<N && (int)(zz)<N && maze[(int)(xx)][(int)(zz)][(int)(y)]!=E && K>0){
@@ -291,14 +291,14 @@ void destroyCube() {
 void computePos(float deltaMove) {
 
 		int i,j,found=0;
-		
+
 		if(fabs(lx)>0.01 && fabs(lz)>0.01)
 			return;
 		lx=round(lx);
 		lz=round(lz);
 		float xx =x+ deltaMove *lx;
 		float zz =z+ deltaMove *lz;
-		
+
 		if(xx>=0 && zz>=0 && (xx)<=N-1 && (zz)<=N-1 && (maze[(int)(xx)][(int)(zz)][(int)(y)]==E || maze[(int)(xx)][(int)(zz)][(int)(y)]==W)){
 			x=xx;
 			z=zz;
@@ -326,116 +326,116 @@ void computePos(float deltaMove) {
 }
 
 void drawCubeColor(float r,float g,float b){
-	
+
 	// FRONT side.
 	glBegin(GL_POLYGON);
-	glColor3f( r, g, b );     
-	glVertex3f(  0.5, -0.5, -0.5 );       
-	glVertex3f(  0.5,  0.5, -0.5 );       
-	glVertex3f( -0.5,  0.5, -0.5 );          
+	glColor3f( r, g, b );
+	glVertex3f(  0.5, -0.5, -0.5 );
+	glVertex3f(  0.5,  0.5, -0.5 );
+	glVertex3f( -0.5,  0.5, -0.5 );
 	glVertex3f( -0.5, -0.5, -0.5 );
 	glEnd();
-	
+
 	// BACK side.
 	glBegin(GL_POLYGON);
-	glColor3f( r, g, b );  
+	glColor3f( r, g, b );
 	glVertex3f(  0.5, -0.5, 0.5 );
 	glVertex3f(  0.5,  0.5, 0.5 );
 	glVertex3f( -0.5,  0.5, 0.5 );
 	glVertex3f( -0.5, -0.5, 0.5 );
 	glEnd();
-	 
+
 	// RIGHT side.
 	glBegin(GL_POLYGON);
-	glColor3f( r, g, b );  
+	glColor3f( r, g, b );
 	glVertex3f( 0.5, -0.5, -0.5 );
 	glVertex3f( 0.5,  0.5, -0.5 );
 	glVertex3f( 0.5,  0.5,  0.5 );
 	glVertex3f( 0.5, -0.5,  0.5 );
 	glEnd();
-	 
+
 	// LEFT side.
 	glBegin(GL_POLYGON);
-	glColor3f( r, g, b );  
+	glColor3f( r, g, b );
 	glVertex3f( -0.5, -0.5,  0.5 );
 	glVertex3f( -0.5,  0.5,  0.5 );
 	glVertex3f( -0.5,  0.5, -0.5 );
 	glVertex3f( -0.5, -0.5, -0.5 );
 	glEnd();
-	 
+
 	// TOP side.
 	glBegin(GL_POLYGON);
-	glColor3f( r, g, b );  
+	glColor3f( r, g, b );
 	glVertex3f(  0.5,  0.5,  0.5 );
 	glVertex3f(  0.5,  0.5, -0.5 );
 	glVertex3f( -0.5,  0.5, -0.5 );
 	glVertex3f( -0.5,  0.5,  0.5 );
 	glEnd();
-	 
+
 	// BOTTOM side.
 	glBegin(GL_POLYGON);
-	glColor3f( r, g, b );  
+	glColor3f( r, g, b );
 	glVertex3f(  0.5, -0.5, -0.5 );
 	glVertex3f(  0.5, -0.5,  0.5 );
 	glVertex3f( -0.5, -0.5,  0.5 );
 	glVertex3f( -0.5, -0.5, -0.5 );
 	glEnd();
-	
+
 }
 
 void drawCubeTexture(float r,float g,float b,GLuint texture){
-	
+
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	
+
 	// FRONT side.
 	glBegin(GL_POLYGON);
-	glColor3f( r, g, b );     
-	glTexCoord2i(0,0);glVertex3f(  0.5, -0.5, -0.5 );       
-	glTexCoord2i(0,1);glVertex3f(  0.5,  0.5, -0.5 );       
-	glTexCoord2i(1,1);glVertex3f( -0.5,  0.5, -0.5 );          
+	glColor3f( r, g, b );
+	glTexCoord2i(0,0);glVertex3f(  0.5, -0.5, -0.5 );
+	glTexCoord2i(0,1);glVertex3f(  0.5,  0.5, -0.5 );
+	glTexCoord2i(1,1);glVertex3f( -0.5,  0.5, -0.5 );
 	glTexCoord2i(1,0);glVertex3f( -0.5, -0.5, -0.5 );
 	glEnd();
-	
+
 	// BACK side.
 	glBegin(GL_POLYGON);
-	glColor3f( r, g, b );  
+	glColor3f( r, g, b );
 	glTexCoord2i(0,0);glVertex3f(  0.5, -0.5, 0.5 );
 	glTexCoord2i(0,1);glVertex3f(  0.5,  0.5, 0.5 );
 	glTexCoord2i(1,1);glVertex3f( -0.5,  0.5, 0.5 );
 	glTexCoord2i(1,0);glVertex3f( -0.5, -0.5, 0.5 );
 	glEnd();
-	
+
 	// RIGHT side.
 	glBegin(GL_POLYGON);
-	glColor3f( r, g, b );  
+	glColor3f( r, g, b );
 	glTexCoord2i(0,0);glVertex3f( 0.5, -0.5, -0.5 );
 	glTexCoord2i(0,1);glVertex3f( 0.5,  0.5, -0.5 );
 	glTexCoord2i(1,1);glVertex3f( 0.5,  0.5,  0.5 );
 	glTexCoord2i(1,0);glVertex3f( 0.5, -0.5,  0.5 );
 	glEnd();
-	
+
 	// LEFT side.
 	glBegin(GL_POLYGON);
-	glColor3f( r, g, b );  
+	glColor3f( r, g, b );
 	glTexCoord2i(0,0);glVertex3f( -0.5, -0.5,  0.5 );
 	glTexCoord2i(0,1);glVertex3f( -0.5,  0.5,  0.5 );
 	glTexCoord2i(1,1);glVertex3f( -0.5,  0.5, -0.5 );
 	glTexCoord2i(1,0);glVertex3f( -0.5, -0.5, -0.5 );
 	glEnd();
-	
+
 	// TOP side.
 	glBegin(GL_POLYGON);
-	glColor3f( r, g, b );  
+	glColor3f( r, g, b );
 	glTexCoord2i(0,0);glVertex3f(  0.5,  0.5,  0.5 );
 	glTexCoord2i(0,1);glVertex3f(  0.5,  0.5, -0.5 );
 	glTexCoord2i(1,1);glVertex3f( -0.5,  0.5, -0.5 );
 	glTexCoord2i(1,0);glVertex3f( -0.5,  0.5,  0.5 );
 	glEnd();
-	
+
 	// BOTTOM side.
 	glBegin(GL_POLYGON);
-	glColor3f( r, g, b );  
+	glColor3f( r, g, b );
 	glTexCoord2i(0,0);glVertex3f(  0.5, -0.5, -0.5 );
 	glTexCoord2i(0,1);glVertex3f(  0.5, -0.5,  0.5 );
 	glTexCoord2i(1,1);glVertex3f( -0.5, -0.5,  0.5 );
@@ -445,15 +445,15 @@ void drawCubeTexture(float r,float g,float b,GLuint texture){
 }
 
 void renderScene(void) {
-	
+
 	char s[100];
 	int i,j,k,score;
 	if (deltaMove )
 		computePos(deltaMove);
-	
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
-	
+
 	if(rPressed%5+1==1){
 		gluLookAt(	x, L+10, z,
 				x+lx, y,  z+lz,
@@ -491,10 +491,10 @@ void renderScene(void) {
 				0.0f, 1.0f,  0.0f);
 		}
 	}
-	
+
 	// Draw ground
 	glColor3f(1,1,0);
-	
+
 	glColor3f(0.9f, 0.9f, 0.9f);
 	glBegin(GL_QUADS);
 		glVertex3f(-100.0f, -0.5f, -100.0f);
@@ -502,7 +502,7 @@ void renderScene(void) {
 		glVertex3f( 100.0f, -0.5f,  100.0f);
 		glVertex3f( 100.0f, -0.5f, -100.0f);
 	glEnd();
-	
+
 	for (i = 0 ; i < N ; i++){
 		for(j = 0 ; j < N ; j++){
 			for(k = 0 ; k < L ; k++){
@@ -530,37 +530,37 @@ void renderScene(void) {
 			}
 		}
 	}
-	
+
 	if(vPressed%2!=1){
 		glTranslatef(x,y,z);
 		draw_cylinder(0.3, 0.5);
 		glTranslatef(-x,-y,-z);
-	}	
+	}
 	score=N*N -moves*10 -(initialK - K)*50;
-	
+
 	sprintf(s,"Score= %d",score);
 	glColor3f(1,0,0);
 	setOrthographicProjection();
-	
+
 	glPushMatrix();
 	glLoadIdentity();
 	renderBitmapString(5,30,0,GLUT_BITMAP_HELVETICA_12,s);
 	sprintf(s,"Hammer= %d",K);
 	renderBitmapString(5,50,0,GLUT_BITMAP_HELVETICA_12,s);
-	
+
 	glColor3f(0,0,1);
 	if(gameOver==true){
 		sprintf(s,"Game Over! Press a to restart or esc to exit");
 		renderBitmapString(5,90,0,GLUT_BITMAP_HELVETICA_12,s);
-		
+
 	}
 	glPopMatrix();
 	restorePerspectiveProjection();
 	glFlush();
 	glutSwapBuffers();
-} 
+}
 
-void processNormalKeys(unsigned char key, int xx, int yy) { 	
+void processNormalKeys(unsigned char key, int xx, int yy) {
 
 	if(key == 27){
 		exit(0);
@@ -600,7 +600,7 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
 			destroyCube();
 		}
 		else if(key == 'E' || key == 'e'){
-			
+
 			if((int)y==L){
 				gameOver=true;
 			}
@@ -617,13 +617,13 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
 			gameOver=false;
 		}
 	}
-        renderScene();         
-} 
+        renderScene();
+}
 
-void releaseKey(unsigned char key, int x, int y) { 	
+void releaseKey(unsigned char key, int x, int y) {
 
         switch (key) {
-           
+
 	     case 'W':
 		     deltaMove = 0;
 		     break;
@@ -636,11 +636,11 @@ void releaseKey(unsigned char key, int x, int y) {
 	     case 's':
 		     deltaMove = 0;
 		     break;
-		     
-        }
-} 
 
-void mouseMove(int x, int y) { 	
+        }
+}
+
+void mouseMove(int x, int y) {
          // this will only be true when the left button is down
          if (xOrigin >= 0) {
 			// update deltaAngle
@@ -652,7 +652,7 @@ void mouseMove(int x, int y) {
 					lz = -cos(angle + deltaAngle);
 					printf("lx=%f lz=%f\n",lx,lz);
 				}
-			}			
+			}
 	}
 	renderScene();
 }
@@ -673,12 +673,12 @@ void mouseButton(int button, int state, int x, int y) {
 			xOrigin = x;
 			oldx=x;
 			oldy=y;
-		}	
+		}
 	}
 }
 
 int main(int argc, char **argv) {
-	
+
 	if(argc<2){
 		printf("Give the file\n");
 		exit(0);
